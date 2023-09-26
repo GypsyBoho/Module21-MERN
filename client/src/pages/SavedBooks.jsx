@@ -14,59 +14,23 @@ import { REMOVE_BOOK } from '../utils/mutations';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
-// const SavedBooks = () => {
-//   // const [userData, setUserData] = useState({});
-//   const { loading, data } = useQuery(GET_ME);
-//   const [removeBook] = useMutation(REMOVE_BOOK);
-//   const userData = data?.me || {}
-
-//   // use this to determine if `useEffect()` hook needs to run again
-//   // const userDataLength = Object.keys(userData).length;
-
-//   useEffect(() => {
-//     const getUserData = async () => {
-//       try {
-//         const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-//         if (!token) {
-//           return false;
-//         }
-
-//         const response = await getMe(token);
-
-//         if (!response.ok) {
-//           throw new Error('something went wrong!');
-//         }
-
-//         const user = await response.json();
-//         setUserData(user);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-
-//     getUserData();
-//   }, [userDataLength]);
-
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
   const { loading, data } = useQuery(GET_ME);
   // const [removeBook, { error }] = useMutation(REMOVE_BOOK);
-  const [removeBook] = useMutation(REMOVE_BOOK, 
+  const [removeBook] = useMutation(REMOVE_BOOK,
     {
       refetchQueries: [
         GET_ME,
         'me',
-        GET_ME,
-        'me'
       ]
     });
-  const savedBooks = data?.me.savedBooks || []
-  // use this to determine if `useEffect()` hook needs to run again
+  let savedBooks = data?.me.savedBooks || []
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
+  // useEffect(() => {
+  //   savedBooks = data?.me.savedBooks || []
+  // })
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -79,19 +43,15 @@ const SavedBooks = () => {
       const { data } = await removeBook({
         variables: { bookId },
       });
-      // removeBookId(bookId);
+
     } catch (err) {
       console.error(err);
     }
-  
-      // if (!response.ok) {
-      //   throw new Error('something went wrong!');
-      // }
 
-        // if data isn't here yet, say so
-      if (!loading) {
-        return <h2>LOADING...</h2>;
-      }
+
+    if (!loading) {
+      return <h2>LOADING...</h2>;
+    }
 
     //   const updatedUser = await response.json();
     //   setUserData(updatedUser);
